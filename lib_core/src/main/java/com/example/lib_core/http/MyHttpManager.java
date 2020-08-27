@@ -11,6 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MyHttpManager {
     private static MyHttpManager myHttpManager;
 
+    //单例
     public static MyHttpManager getInstance(){
         if (myHttpManager==null){
             myHttpManager = new MyHttpManager();
@@ -20,6 +21,7 @@ public class MyHttpManager {
 
     private Retrofit retrofit;
 
+    //获取retrofit
     public Retrofit getRetrofit(String baseUrl) {
         if (retrofit==null){
             create(baseUrl);
@@ -36,6 +38,7 @@ public class MyHttpManager {
                 .build();
     }
 
+    //返回okHttpClient
     public OkHttpClient getClient() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
