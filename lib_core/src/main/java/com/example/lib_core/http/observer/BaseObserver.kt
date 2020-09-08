@@ -1,21 +1,16 @@
-package com.example.lib_core.http.observer;
+package com.example.lib_core.http.observer
 
-import io.reactivex.observers.DisposableObserver;
+import io.reactivex.observers.DisposableObserver
 
 //观察者
-public abstract class BaseObserver<T> extends DisposableObserver<T> implements IObserver<T> {
-    @Override
-    public void onNext(T t) {
-        success(t);
+abstract class BaseObserver<T> : DisposableObserver<T>(), IObserver<T> {
+    override fun onNext(t: T) {
+        success(t)
     }
 
-    @Override
-    public void onError(Throwable e) {
-        error(e.getMessage());
+    override fun onError(e: Throwable) {
+        error(e.message)
     }
 
-    @Override
-    public void onComplete() {
-
-    }
+    override fun onComplete() {}
 }

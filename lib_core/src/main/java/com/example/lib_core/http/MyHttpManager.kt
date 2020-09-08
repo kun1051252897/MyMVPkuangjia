@@ -1,54 +1,55 @@
-package com.example.lib_core.http;
+package com.example.lib_core.http
 
-import java.util.concurrent.TimeUnit;
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
-
-public class MyHttpManager {
-    private static MyHttpManager myHttpManager;
-
-    //单例
-    public static MyHttpManager getInstance(){
-        if (myHttpManager==null){
-            myHttpManager = new MyHttpManager();
-        }
-        return myHttpManager;
-    }
-
-    private Retrofit retrofit;
+class MyHttpManager {
+    private var retrofit: Retrofit? = null
 
     //获取retrofit
-    public Retrofit getRetrofit(String baseUrl) {
-        if (retrofit==null){
-            create(baseUrl);
+    fun getRetrofit(baseUrl: String): Retrofit? {
+        if (retrofit == null) {
+            create(baseUrl)
         }
-        return retrofit;
+        return retrofit
     }
 
-    private void create(String baseUrl) {
-        retrofit = new Retrofit.Builder()
+    private fun create(baseUrl: String) {
+        retrofit = Retrofit.Builder()
                 .baseUrl(baseUrl)
-                .client(getClient())
+                .client(client)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
-                .build();
+                .build()
     }
 
     //返回okHttpClient
-    public OkHttpClient getClient() {
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+    val client: OkHttpClient
+        get() {
+            val interceptor = HttpLoggingInterceptor()
+            interceptor.level = HttpLoggingInterceptor.Level.BODY
+            return OkHttpClient.Builder()
+                    .connectTimeout(1, TimeUnit.MINUTES)
+                    .writeTimeout(1, TimeUnit.MINUTES)
+                    .readTimeout(1, TimeUnit.MINUTES)
+                    .addInterceptor(interceptor)
+                    .build()
+        }
 
-        OkHttpClient client = new  OkHttpClient.Builder()
-                .connectTimeout(1, TimeUnit.MINUTES)
-                .writeTimeout(1,TimeUnit.MINUTES)
-                .readTimeout(1,TimeUnit.MINUTES)
-                .addInterceptor(interceptor)
-                .build();
-        return client;
+    companion object {
+        private var myHttpManager: MyHttpManager? = null
+
+        //单例
+        val instance: MyHttpManager?
+            get() {
+                if (myHttpManager == null) {
+                    myHttpManager = MyHttpManager()
+                }
+                return myHttpManager
+            }
     }
 }

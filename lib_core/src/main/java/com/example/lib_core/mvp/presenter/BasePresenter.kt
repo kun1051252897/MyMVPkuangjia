@@ -1,28 +1,26 @@
-package com.example.lib_core.mvp.presenter;
+package com.example.lib_core.mvp.presenter
 
-import com.example.lib_core.mvp.model.IModel;
-import com.example.lib_core.mvp.view.IView;
+import com.example.lib_core.mvp.model.IModel
+import com.example.lib_core.mvp.view.IView
+import javax.inject.Inject
 
-import javax.inject.Inject;
-
-public class BasePresenter<M extends IModel,V extends IView> implements IPresenter {
+class BasePresenter<M : IModel?, V : IView?>(mModel: M, mView: V) : IPresenter {
+    @JvmField
     @Inject
-    protected M mModel;
-    protected V mView;
-
-    public BasePresenter(M mModel, V mView) {
-        this.mModel = mModel;
-        this.mView = mView;
+    var mModel: M?
+    protected var mView: V?
+    override fun onDestroy() {
+        if (mModel != null) {
+            mModel!!.onDestroy()
+            mModel = null
+        }
+        if (mView != null) {
+            mView = null
+        }
     }
 
-    @Override
-    public void onDestroy() {
-        if(mModel!=null){
-            mModel.onDestroy();
-            mModel = null;
-        }
-        if (mView!=null){
-            mView = null;
-        }
+    init {
+        this.mModel = mModel
+        this.mView = mView
     }
 }

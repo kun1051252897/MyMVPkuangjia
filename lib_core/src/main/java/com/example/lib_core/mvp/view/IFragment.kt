@@ -1,7 +1,7 @@
-package com.example.lib_core.mvp.view;
+package com.example.lib_core.mvp.view
 
-import android.view.View;
+import android.view.View
 
-public interface IFragment extends IActivity {
-    <T extends View> T findViewById(int id);
+interface IFragment : IActivity {
+    fun <T : View?> findViewById(id: Int): T
 }
